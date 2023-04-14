@@ -19,17 +19,34 @@ namespace ParseNumberToWords
         {
             //var n = "54308428790203478762340052723346983453487023489987231275412390872348475";
             //var n = "5412390872348475";
-            var n = "1220004";
+            var n = "4225004";
             Console.WriteLine(n);
-            foreach (var s in solve(splitIntoCategories(n))) Console.WriteLine(s);
-            Console.ReadLine();
+
+            string str = string.Empty;
+            foreach (var s in solve(splitIntoCategories(n)))
+            {
+                str += s;
+            }
+            string[] splitted = str.Split(' ');
+            str = string.Empty;
+            foreach (string a in splitted)
+            {
+                if (string.IsNullOrEmpty(a))
+                {
+                    continue;
+                }
+                str += $"{a} ";
+            }
+            Console.WriteLine(str);
         }
+
         //разбить на разряды
         static IEnumerable<string> splitIntoCategories(string s)
         {
             s = s.PadLeft(s.Length + 3 - s.Length % 3, '0');
             return Enumerable.Range(0, s.Length / 3).Select(i => s.Substring(i * 3, 3));
         }
+
         //вывести название цифр в разряде
         static IEnumerable<string> solve(IEnumerable<string> n)
         {
@@ -38,15 +55,15 @@ namespace ParseNumberToWords
             {
                 var countdown = n.Count() - ++ii;
                 yield return
-                    String.Format(@"{0} {1} {2} {3}",
+                    String.Format(@"{0} {1} {2} {3} ",
                         s[0] == '0' ? "" : nums_100_900[getDigit(s[0])],
                         getE1(s[1], s[2]),
                         getE2(s[1], s[2], countdown),
                         s == "000" ? "" : getRankName(s, countdown)
                     );
             }
-
         }
+
         //вторая цифра разряда
         private static string getE1(char p1, char p2)
         {
@@ -58,6 +75,7 @@ namespace ParseNumberToWords
             }
             return "";
         }
+
         //третья цифра разряда
         private static string getE2(char p1, char p2, int cd)
         {
@@ -71,8 +89,9 @@ namespace ParseNumberToWords
 
         private static int getDigit(char p1)
         {
-            return Int32.Parse(p1.ToString());
+            return int.Parse(p1.ToString());
         }
+
         //вывести название разрядов
         private static string getRankName(string s, int ii)
         {
@@ -85,8 +104,14 @@ namespace ParseNumberToWords
             {
                 return r + (ii == 1 ? "и" : "а");
             }
-            else
+            else if (ii == 1)
+            {
                 return r + (ii == 1 ? "" : "ов");
+            }
+            else
+            {
+                return r + (ii == 2 ? "" : "ов");
+            }
         }
     }
 }
